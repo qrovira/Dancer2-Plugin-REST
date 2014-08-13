@@ -6,7 +6,7 @@ use warnings;
 
 use Carp 'croak';
 
-use Dancer2 0.140001;
+use Dancer2 0.149000_01;
 use Dancer2::Plugin;
 use Class::Load qw/ try_load_class /;
 
@@ -46,8 +46,8 @@ register prepare_serializer_for_format => sub {
             }
 
             $dsl->set(serializer => $serializer);
-            $dsl->context->response( Dancer2::Core::Response->new(
-                %{ $dsl->context->response },
+            $dsl->app->set_response( Dancer2::Core::Response->new(
+                %{ $dsl->app->response },
                 serializer => $dsl->set('serializer'),
             ) );
 
