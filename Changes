@@ -4,6 +4,8 @@ Revision history for Dancer2-Plugin-REST
  [API CHANGES]
 
  [BUG FIXES]
+ - Change tests to use Pack::Test instead of
+    the deprecated Dancer2::Test. (GH#3, Davs)
 
  [DOCUMENTATION]
 
