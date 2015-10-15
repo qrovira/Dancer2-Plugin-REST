@@ -54,15 +54,17 @@ my @tests = (
     },
 );
 
-plan tests => scalar(@tests) * 2;
+plan tests => scalar @tests;
 
 for my $test ( @tests ) {
-    my $response = $plack_test->request( GET $test->{path} );
+    subtest $test->{path} => sub {
+        my $response = $plack_test->request( GET $test->{path} );
 
-    like($response->header('Content-Type'),
-       $test->{content_type},
-       "headers have content_type set to ".$test->{content_type});
+        like($response->header('Content-Type'),
+        $test->{content_type},
+        "headers have content_type set to ".$test->{content_type});
 
-    is( $response->content, $test->{response},
-        "\$data has been encoded" );
+        is( $response->content, $test->{response},
+            "\$data has been encoded" );
+    };
 }
