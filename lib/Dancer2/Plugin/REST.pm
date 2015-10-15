@@ -37,7 +37,11 @@ register prepare_serializer_for_format => sub {
         'before' => sub {
             my $format = $dsl->params->{'format'};
             $format  ||= $dsl->captures->{'format'} if $dsl->captures;
-            return unless defined $format;
+
+            unless  ( defined $format ) { 
+                delete $dsl->app->response->{serializer};
+                return;
+            }
 
             my $serializer = $serializers->{$format};
             
