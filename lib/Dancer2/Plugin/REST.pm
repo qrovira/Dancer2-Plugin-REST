@@ -6,13 +6,9 @@ use warnings;
 
 use Carp 'croak';
 
-use Dancer2 0.149000_01;
 use Dancer2::Plugin;
+
 use Class::Load qw/ try_load_class /;
-
-use Moo::Role;
-
-with 'Dancer2::Plugin';
 
 # [todo] - add XML support
 my $content_types = {
@@ -20,10 +16,10 @@ my $content_types = {
     yml  => 'text/x-yaml',
 };
 
-register prepare_serializer_for_format => sub {
-    my $dsl = shift;
+plugin_keywords prepare_serializer_for_format => sub {
+    my $self = shift;
 
-    my $conf        = plugin_setting;
+    my $conf        = $self->config;
     my $serializers = (
         ($conf && exists $conf->{serializers})
         ? $conf->{serializers}
@@ -33,31 +29,35 @@ register prepare_serializer_for_format => sub {
         }
     );
 
-    $dsl->hook(
-        'before' => sub {
-            my $format = $dsl->params->{'format'};
-            $format  ||= $dsl->captures->{'format'} if $dsl->captures;
+    $self->app->add_hook(
+        Dancer2::Core::Hook->new(
+            name => 'before',
+            code => sub {
+                my $request = $self->app->request;
+                my $format = $request->params->{'format'};
+                $format  ||= $request->captures->{'format'} if $request->captures;
 
-            unless  ( defined $format ) { 
-                delete $dsl->app->response->{serializer};
-                return;
+                unless  ( defined $format ) { 
+                    delete $self->app->response->{serializer};
+                    return;
+                }
+
+                my $serializer = $serializers->{$format};
+                
+                unless( $serializer ) {
+                    return $self->app->send_error("unsupported format requested: " . $format, 404);
+                }
+
+                $self->app->setting(serializer => $serializer);
+                $self->app->set_response( Dancer2::Core::Response->new(
+                    %{ $self->app->response },
+                    serializer => $self->app->setting('serializer'),
+                ) );
+
+                my $ct = $content_types->{$format} || $self->app->setting('content_type');
+                $self->app->response->content_type($ct);
             }
-
-            my $serializer = $serializers->{$format};
-            
-            unless( $serializer ) {
-                return $dsl->send_error("unsupported format requested: " . $format, 404);
-            }
-
-            $dsl->set(serializer => $serializer);
-            $dsl->app->set_response( Dancer2::Core::Response->new(
-                %{ $dsl->app->response },
-                serializer => $dsl->set('serializer'),
-            ) );
-
-            my $ct = $content_types->{$format} || $dsl->setting('content_type');
-            $dsl->content_type($ct);
-        }
+        )
     );
 };
 
