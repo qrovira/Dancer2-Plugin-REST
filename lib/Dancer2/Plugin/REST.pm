@@ -6,13 +6,8 @@ use warnings;
 
 use Carp 'croak';
 
-use Dancer2 0.149000_01;
 use Dancer2::Plugin;
 use Class::Load qw/ try_load_class /;
-
-use Moo::Role;
-
-with 'Dancer2::Plugin';
 
 # [todo] - add XML support
 my $content_types = {
