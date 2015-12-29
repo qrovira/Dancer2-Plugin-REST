@@ -172,7 +172,7 @@ for my $code (keys %http_codes) {
     plugin_keywords $helper_name => sub {
         my $self = shift;
 
-        $self->app->send_entity(
+        $self->send_entity(
             ( $code >= 400 ? {error => $_[0]} : $_[0] ),
             $code
         );
