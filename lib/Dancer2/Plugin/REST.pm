@@ -87,13 +87,14 @@ plugin_keywords resource => sub {
     }
 };
 
-register send_entity => sub {
-    my ($dsl, $entity, $http_code) = @_;
+plugin_keywords send_entity => sub {
+    my ($self, $entity, $http_code) = @_;
 
     $http_code ||= 200;
 
-    $dsl->status($http_code);
-    $entity;
+    $self->app->response->status($http_code);
+
+    return $entity;
 };
 
 my %http_codes = (
