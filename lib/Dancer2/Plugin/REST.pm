@@ -61,8 +61,8 @@ plugin_keywords prepare_serializer_for_format => sub {
     );
 };
 
-register resource => sub {
-    my $dsl = shift;
+plugin_keywords resource => sub {
+    my $self = shift;
 
     my ($resource, %triggers) = @_;
 
@@ -78,7 +78,7 @@ register resource => sub {
              and grep { $triggers{$_} } keys %actions;
 
     while( my( $action, $code ) = each %triggers ) {
-            $dsl->app->add_route( 
+            $self->app->add_route( 
                 method => $actions{$action},
                 regexp => $_,
                 code   => $code,
