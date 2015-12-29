@@ -1,6 +1,9 @@
 Revision history for Dancer2-Plugin-REST
 
 {{$NEXT}}
+  - Make changes to the module so that it's compatible with the upcoming
+    backward-compatible release. (GH#12, Peter Mottram)
+
   [ API CHANGES ]
 
   [ BUG FIXES ]
