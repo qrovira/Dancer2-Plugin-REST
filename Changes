@@ -1,20 +1,11 @@
 Revision history for Dancer2-Plugin-REST
 
-{{$NEXT}}
+0.27 2015-12-29
   - Make changes to the module so that it's compatible with the upcoming
     backward-compatible release. (GH#12, Peter Mottram)
 
-  [ API CHANGES ]
-
-  [ BUG FIXES ]
-
-  [ DOCUMENTATION ]
-
-  [ ENHANCEMENTS ]
-
-  [ NEW FEATURES ]
-
   [ STATISTICS ]
+    - code churn: 4 files changed, 75 insertions(+), 67 deletions(-)
 
 0.26 2015-10-15
   [ BUG FIXES ]
