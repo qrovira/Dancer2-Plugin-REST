@@ -169,17 +169,15 @@ for my $code (keys %http_codes) {
     $helper_name =~ s/[^\w]+/_/gms;
     $helper_name = "status_${helper_name}";
 
-    register $helper_name => sub {
-        my $dsl = shift;
+    plugin_keywords $helper_name => sub {
+        my $self = shift;
 
-        $dsl->send_entity(
+        $self->app->send_entity(
             ( $code >= 400 ? {error => $_[0]} : $_[0] ),
             $code
         );
     };
 }
-
-register_plugin for_versions => [2];
 
 1;
 
