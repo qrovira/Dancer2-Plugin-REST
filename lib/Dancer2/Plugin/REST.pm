@@ -10,6 +10,12 @@ use Dancer2::Plugin;
 
 use Class::Load qw/ try_load_class /;
 
+has '+app' => (
+    handles => {
+        map { $_ => $_ } qw/ request response /
+    },
+);
+
 # [todo] - add XML support
 my $content_types = {
     json => 'application/json',
@@ -33,7 +39,7 @@ plugin_keywords prepare_serializer_for_format => sub {
         Dancer2::Core::Hook->new(
             name => 'before',
             code => sub {
-                my $request = $self->app->request;
+                my $request = $self->request;
                 my $format = $request->params->{'format'};
                 $format  ||= $request->captures->{'format'} if $request->captures;
 
